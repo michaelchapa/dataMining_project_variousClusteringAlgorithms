@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 # Notes:
 #   None
 def calculate_kMeans(dPoints, k, randClust, verbose):
+    # TODO: calculate if k == len(randClust), throw error if no match.
     for xPoint, yPoint in dPoints:
         distances = []
         for xClust, yClust in randClust:
@@ -27,7 +28,8 @@ def calculate_kMeans(dPoints, k, randClust, verbose):
             print("(%d, %d):" %(xPoint, yPoint))
             print("\t", distances)
             
-        minDistances = getShortestDistance(distances, k)
+        minDistances = getShortestDistance(distances, k, 0)
+        updateClusters(minDistances, (xPoint, yPoint), 1)
         
         
 ########################## getShortestDistance ###############################
@@ -37,34 +39,55 @@ def calculate_kMeans(dPoints, k, randClust, verbose):
 # Parameters:
 #   I   distances   Array(tuple(s))     tuple(distance, clusterCoordinates)
 #   I   k           Int                 # of clusters
+#   I   verbose     Boolean             Prints intermediate data to stdout
 # Returns:
 #   O   minimums    Dictionary          Key = Cluster coordinate, 
 #                                       Value = list(closest coordinates)
 # Notes:
 #   None
-def getShortestDistance(distances, k):
-    minDistances = dict()
-    count = 0
-    coordinates = []
-    
-    for distance in distances:
-        if count == k:
-            print(coordinates)
-            # do the comparison
-            # add the minimum coordinate to the cluster
-            # set the count to 0
-            count = 0
-            # reset the list
-            coordinates = []
-
-        # append to the list
-        coordinates.append(distance)
-        # increment the count
-        count += 1
+def getShortestDistance(distances, k, verbose):
+    coordinates = dict() # keys = cluster points, values = dataPoints
+    minimums = list()
+    for dist, coord in distances:
+        coordinates.update({coord: list()})
         
-    return distances
-
-
+    minDist = distances[0][0]
+    minCoord = distances[0][1]
+    for dist, coord in distances:
+        if dist < minDist:
+            minDist = dist
+            minCoord = coord
+            minimums = list() # clears the list, new minimum found
+        elif dist == minDist:
+            minimums.append(coord)
+    
+    if(verbose):
+        print("minimums:", minimums)
+        print("\t", minCoord, minDist, "\n")
+    
+    if(len(minimums) != 0):
+        return minimums
+    else:
+        print("************ minCoord: ", type(minCoord))
+        return minCoord
+    
+########################### updateClusters ###################################
+# Purpose: 
+#   None
+# Parameters:
+#   None
+# Returns:
+#   None
+# Notes:
+#   None
+def updateClusters(minDistances, dPoint, verbose):
+    clusters = dict()
+    print("###### minDistances: ", type(minDistances))
+    for item in minDistances:
+        print(dPoint, ":")
+        print(type(item), item)
+        # clusters.setdefault(clstrPoint, []).append(dist)
+    print()
 
 def main():
     data = [[2, 10], [2, 5], [8, 4], [5, 8], [7, 5], [6, 4], [1, 2], [4, 9]]
