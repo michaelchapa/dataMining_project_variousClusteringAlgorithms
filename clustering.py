@@ -21,30 +21,35 @@ def calculate_kMeans(dPoints, k, randClust, verbose):
         clusters.update({cluster: list()})
     
     # TODO: calculate if k == len(randClust), throw error if no match.
-    for xPoint, yPoint in dPoints:
-        distances = []
-        for xClust, yClust in randClust:
-            distance = np.sqrt(pow((xClust - xPoint), 2) \
-                               + pow((yClust - yPoint), 2))
-            distances.append((round(distance, 3), (xClust, yClust)))
-        
-        if(verbose):
-            print("(%d, %d):" %(xPoint, yPoint))
-            print("\t", distances)
+    prevClust = [(0, 0), (0, 0), (0, 0)]
+    while(1):
+        for xPoint, yPoint in dPoints:
+            distances = []
+            for xClust, yClust in randClust:
+                distance = np.sqrt(pow((xClust - xPoint), 2) \
+                                   + pow((yClust - yPoint), 2))
+                distances.append((round(distance, 3), (xClust, yClust)))
             
-        minDistances = getShortestDistance(distances, k, 0)
-        
-        if type(minDistances) is tuple:
-            clusters.setdefault(minDistances, []).append((xPoint, yPoint))
-        else: # a list, we must traverse the tuples
-            for item in minDistances:
-                clusters.setdefault(item, []).append((xPoint, yPoint))
+            if(verbose):
+                print("(%d, %d):" %(xPoint, yPoint))
+                print("\t", distances)
                 
-    calculateCentroids(clusters)
+            minDistances = getShortestDistance(distances, k, 0)
+            
+            if type(minDistances) is tuple:
+                clusters.setdefault(minDistances, []).append((xPoint, yPoint))
+            else: # a list, we must traverse the tuples
+                for item in minDistances:
+                    clusters.setdefault(item, []).append((xPoint, yPoint))
+        
+        # exit condition
+        newClust = calculateCentroids(clusters)
+        if(prevClust == newClust):
+            break
+        else:
+            prevClust = newClust
+        
 
-    
-        
-        
 ########################## getShortestDistance ###############################
 # Purpose:
 #   A helper fxn for subRoutine calculate_kMeans, will determine the minimum
@@ -85,11 +90,12 @@ def getShortestDistance(distances, k, verbose):
     
 ########################### calculateCentroids ###################################
 # Purpose: 
-#   None
+#   This is a helper fxn for calculate_kMeans
+#   Does an average of the 2-d points and returns k clusters in a list.
 # Parameters:
-#   None
+#   I   clusters        list(tuples)    The clusters to be averaged
 # Returns:
-#   None
+#   O   newCentroids    list(tuples)    New centroids for next iteration
 # Notes:
 #   None
 def calculateCentroids(clusters):
@@ -106,7 +112,6 @@ def calculateCentroids(clusters):
 def main():
     data = [[2, 10], [2, 5], [8, 4], [5, 8], [7, 5], [6, 4], [1, 2], [4, 9]]
     initClusterPoints = [(8, 4), (5, 8), (1, 2)]
-    # initClusterPoints = [(10, 8), (2, 5), (8, 4)]
     calculate_kMeans(data, 3, initClusterPoints, 0)
 
 # Context the file is running in is __main__ 
