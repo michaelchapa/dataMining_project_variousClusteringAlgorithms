@@ -16,6 +16,10 @@ import matplotlib.pyplot as plt
 # Notes:
 #   None
 def calculate_kMeans(dPoints, k, randClust, verbose):
+    clusters = dict()
+    for cluster in randClust:
+        clusters.update({cluster: list()})
+    
     # TODO: calculate if k == len(randClust), throw error if no match.
     for xPoint, yPoint in dPoints:
         distances = []
@@ -29,7 +33,16 @@ def calculate_kMeans(dPoints, k, randClust, verbose):
             print("\t", distances)
             
         minDistances = getShortestDistance(distances, k, 0)
-        updateClusters(minDistances, (xPoint, yPoint), 1)
+        
+        if type(minDistances) is tuple:
+            clusters.setdefault(minDistances, []).append((xPoint, yPoint))
+        else: # a list, we must traverse the tuples
+            for item in minDistances:
+                clusters.setdefault(item, []).append((xPoint, yPoint))
+                
+    calculateCentroids(clusters)
+
+    
         
         
 ########################## getShortestDistance ###############################
@@ -68,10 +81,9 @@ def getShortestDistance(distances, k, verbose):
     if(len(minimums) != 0):
         return minimums
     else:
-        print("************ minCoord: ", type(minCoord))
         return minCoord
     
-########################### updateClusters ###################################
+########################### calculateCentroids ###################################
 # Purpose: 
 #   None
 # Parameters:
@@ -80,18 +92,21 @@ def getShortestDistance(distances, k, verbose):
 #   None
 # Notes:
 #   None
-def updateClusters(minDistances, dPoint, verbose):
-    clusters = dict()
-    print("###### minDistances: ", type(minDistances))
-    for item in minDistances:
-        print(dPoint, ":")
-        print(type(item), item)
-        # clusters.setdefault(clstrPoint, []).append(dist)
-    print()
+def calculateCentroids(clusters):
+    newCentroids = []
+    
+    for key in clusters:
+        values = np.array(clusters[key])
+        values = np.round(values.mean(axis = 0), decimals = 2)
+        newCentroids.append(tuple(values))
+        
+    print(newCentroids)
+    
 
 def main():
     data = [[2, 10], [2, 5], [8, 4], [5, 8], [7, 5], [6, 4], [1, 2], [4, 9]]
-    initClusterPoints = [(2, 5), (5, 8), (1, 2)]
+    initClusterPoints = [(8, 4), (5, 8), (1, 2)]
+    # initClusterPoints = [(10, 8), (2, 5), (8, 4)]
     calculate_kMeans(data, 3, initClusterPoints, 0)
 
 # Context the file is running in is __main__ 
