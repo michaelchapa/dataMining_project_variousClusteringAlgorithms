@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+def calculate_PAM():
+    return "hello"
+
+
 ########################## calculate_kMeans ##################################
 # Purpose:
 #   Calculate k-means using 2-d Euclidian objective function on 2-D
