@@ -133,22 +133,22 @@ def calculate_meanShift(data, radius, verbose):
     
     while(data):
         dPoint = data[0]
-        
         clusters.setdefault(currentClusterKey, []).append(tuple(dPoint))
-        x, y = dPoint
-        data.remove([x, y])
+        data.remove(dPoint)
+        
+        if verbose: print("+ (%d, %d) to cluster %d" % \
+                          (dPoint[0], dPoint[1], currentClusterKey))
         
         while(1):
             inRadius = get_inRadius(dPoint, data, radius)
             
             if not inRadius:
-                if verbose: print("BREAK")
                 break
             else:
                 for x, y in inRadius:
                     clusters.setdefault(currentClusterKey, []).append((x, y))
                     data.remove([x, y])
-                    if verbose: print("\tadded: (%d, %d) to cluster %d" % \
+                    if verbose: print("+ (%d, %d) to cluster %d" % \
                                       (x, y, currentClusterKey))
                     
                 dPoint = calculate_clusterCenter( \
@@ -200,7 +200,7 @@ def get_inRadius(dPoint, data, radius):
 def calculate_clusterCenter(dPoints):
     values = np.array(dPoints)
     value = list(np.round(values.mean(axis = 0), decimals = 2))
-    # print("NEW CENTROID: ", value)
+    
     return value
     
 
@@ -209,7 +209,7 @@ def main():
             [7, 5], [6, 4], [1, 2], [4, 9]]
     initClusterPoints = [(8, 4), (5, 8), (1, 2)]
     # calculate_kMeans(data, 3, initClusterPoints, 0)
-    calculate_meanShift(data, 4, 1)
+    calculate_meanShift(data, 3, 1)
 
 # Context the file is running in is __main__ 
 if __name__ == "__main__":
