@@ -109,21 +109,7 @@ def calculateCentroids(clusters):
         
     print(newCentroids)
 
-######################### calculate_meanShift ################################
-# Purpose:
-#   None
-# Parameters:
-#   None
-# Returns:
-#   None
-# Notes:
-#   None
-def calculate_meanShift(dPoints, verbose):
-    print("Hello")
-    
 
-<<<<<<< HEAD
-=======
 ######################### calculateMeanShift #################################
 # Purpose:
 #   Uses Mean-Shift clustering algorithm to cluster 2-D dataPoints.
@@ -216,15 +202,10 @@ def calculate_clusterCenter(dPoints):
     value = list(np.round(values.mean(axis = 0), decimals = 2))
     
     return value
-    
->>>>>>> feature/meanShift
+
 
 def main():
-    data = [[2, 10], [2, 5], [8, 4], [5, 8], 
-            [7, 5], [6, 4], [1, 2], [4, 9]]
-    initClusterPoints = [(8, 4), (5, 8), (1, 2)]
-    # calculate_kMeans(data, 3, initClusterPoints, 0)
-    calculate_meanShift(data, 3, 1)
+    print("To run these applications use the driver.py file.")
 
 # Context the file is running in is __main__ 
 if __name__ == "__main__":
