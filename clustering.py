@@ -88,7 +88,8 @@ def getShortestDistance(distances, k, verbose):
     else:
         return minCoord
     
-########################### calculateCentroids ###################################
+    
+########################### calculateCentroids ###############################
 # Purpose: 
 #   This is a helper fxn for calculate_kMeans
 #   Does an average of the 2-d points and returns k clusters in a list.
@@ -108,24 +109,103 @@ def calculateCentroids(clusters):
         
     print(newCentroids)
 
-######################### calculate_meanShift ################################
+
+######################### calculateMeanShift #################################
 # Purpose:
-#   None
+#   Uses Mean-Shift clustering algorithm to cluster 2-D dataPoints.
+#   An initial point is selected and will collect other points based on 
+#   a user defined radius. 
 # Parameters:
-#   None
+#   I   data    list(multiple lists)    represents multiple 2-D dataPoints
+#   I   radius  Integer                 Used to determine radius around a
+#                                       chosen point in the 2-D plain
+#   I   verbose     Boolean             Prints intermediate data to stdout
 # Returns:
 #   None
 # Notes:
-#   None
-def calculate_meanShift(dPoints, verbose):
-    print("Hello")
+#   Asserts should be used to test conditions that should never happen. 
+def calculate_meanShift(data, radius, verbose):
+    assert all(type(dataPoint) == list for dataPoint in data), \
+        "data-points should be a list of lists."
     
+    clusters = dict()
+    currentClusterKey = 0
+    
+    while(data):
+        dPoint = data[0]
+        clusters.setdefault(currentClusterKey, []).append(tuple(dPoint))
+        data.remove(dPoint)
+        
+        if verbose: print("+ (%d, %d) to cluster %d" % \
+                          (dPoint[0], dPoint[1], currentClusterKey))
+        
+        while(1):
+            inRadius = get_inRadius(dPoint, data, radius)
+            
+            if not inRadius:
+                break
+            else:
+                for x, y in inRadius:
+                    clusters.setdefault(currentClusterKey, []).append((x, y))
+                    data.remove([x, y])
+                    if verbose: print("+ (%d, %d) to cluster %d" % \
+                                      (x, y, currentClusterKey))
+                    
+                dPoint = calculate_clusterCenter( \
+                    clusters.get(currentClusterKey))
+                
+        currentClusterKey += 1
+        
+    print("FINAL: ", clusters)
+            
+        
+########################### get_inRadius #####################################
+# Purpose:
+#   This is a helper fxn for calculate_meanShift. It will take the dataPoint
+#   under consideration and create a radius for it. It will test all available
+#   points and determine if they are in the radius. We can achieve this by
+#   taking the considered dataPoint and creating 2 ranges. (X, Y)
+#   If Radius = 3, dataPoint = (0, 0), then the X-range = [-3, 3], Y-range = 
+#   [-3, 3]. If any of the dataPoints have dual membership to the ranges, 
+#   then they're considered to be in the considered dataPoint's radius.
+# Parameter:
+#   I   dPoint      tuple       2-D tuple for dataPoint under consideration
+#   I   data        list(lists) Represents multiple 2-D data points
+#   I   radius      Integer     Radius around the dataPoint
+# Returns:
+#   O   inRadius    list(tuple) List of dataPoints in radius
+# Notes:
+#   Don't add init dPoint to inRadius, it's already added to Dict 'clusters'
+def get_inRadius(dPoint, data, radius):
+    inRadius = list()
+    xPoint, yPoint = dPoint
+    xMin, xMax = (xPoint - radius), (xPoint + radius)
+    yMin, yMax = (yPoint - radius), (yPoint + radius)
+    
+    inRadius = [(x, y) for x, y in data \
+                if xMin <= x <= xMax and yMin <= y <= yMax]
+    
+    return inRadius
+
+########################## calculate_clusterCenter ###########################
+# Purpose:
+#   This is a helper fxn for calculate_meanShift. Calculate new mean centroid
+#   with the data points in the current cluster.
+# Parameter:
+#   None
+# Return:
+#   None
+# Notes:
+#   None
+def calculate_clusterCenter(dPoints):
+    values = np.array(dPoints)
+    value = list(np.round(values.mean(axis = 0), decimals = 2))
+    
+    return value
 
 
 def main():
-    data = [[2, 10], [2, 5], [8, 4], [5, 8], [7, 5], [6, 4], [1, 2], [4, 9]]
-    initClusterPoints = [(8, 4), (5, 8), (1, 2)]
-    calculate_kMeans(data, 3, initClusterPoints, 0)
+    print("To run these applications use the driver.py file.")
 
 # Context the file is running in is __main__ 
 if __name__ == "__main__":
