@@ -131,19 +131,18 @@ def calculate_meanShift(data, radius, verbose):
     clusters = dict()
     currentClusterKey = 0
     
-    for dPoint in data:
-        if verbose: print("centroid: ", dPoint)
+    while(data):
+        dPoint = data[0]
         
         clusters.setdefault(currentClusterKey, []).append(tuple(dPoint))
         x, y = dPoint
         data.remove([x, y])
         
         while(1):
-            if verbose: print("clusters: ", clusters)
             inRadius = get_inRadius(dPoint, data, radius)
             
             if not inRadius:
-                if verbose: print("***break***")
+                if verbose: print("BREAK")
                 break
             else:
                 for x, y in inRadius:
@@ -178,8 +177,6 @@ def calculate_meanShift(data, radius, verbose):
 # Notes:
 #   Don't add init dPoint to inRadius, it's already added to Dict 'clusters'
 def get_inRadius(dPoint, data, radius):
-    print("DPOINT: ", dPoint)
-    print("\tDATA: ", data)
     inRadius = list()
     xPoint, yPoint = dPoint
     xMin, xMax = (xPoint - radius), (xPoint + radius)
@@ -212,7 +209,7 @@ def main():
             [7, 5], [6, 4], [1, 2], [4, 9]]
     initClusterPoints = [(8, 4), (5, 8), (1, 2)]
     # calculate_kMeans(data, 3, initClusterPoints, 0)
-    calculate_meanShift(data, 3, 1)
+    calculate_meanShift(data, 4, 1)
 
 # Context the file is running in is __main__ 
 if __name__ == "__main__":
