@@ -1,11 +1,55 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.spatial import distance
+from itertools import combinations
 
-# this is a comment
-def calculate_PAM():
-    return "hello"
+########################## calculate_PAM #####################################
+# Purpose:
+#   Calculate clusters with the PAM algorithm using 2-D Euclidian objective
+#   function on 2-D coordinates.
+# Parameters:
+#   I       dPoints         Numpy Array     2-D numerical
+#   I       k               Int             # of clusters desired
+# Returns:
+#   O       dataOut         Int             Minimum cost value in dict
+# Notes:
+#   Not finished yet, commiting what I have for now.
+def calculate_PAM(dPoints, k):
+    cost = {}
+    m = len(dPoints)
 
+    # generate every medoid combination
+    medoid_list = list(combinations(dPoints, k))
+
+    # for each set of medoids
+    for line in medoid_list:
+        # generate empty distance array for current medoids
+        dist_array = [[0 for x in range(k)] for y in range(m)]
+
+        # calculate distances and fill array
+        for i in range(m):
+            for j in range(k):
+                dist_array[i][j] = distance.euclidean(dPoints[i], line[j])
+
+        # calculate cost for medoid set
+        value = 0
+        for i in range(m):
+            value += min(dist_array[i])
+        
+        # key is tuple consisting of k*2 int values
+        # each pair within tuple is a medoid point
+        key = np.array(list(line)).flatten()
+
+        # dict consisting of medoids:cost pairs
+        cost[tuple(key)] = value
+
+    dataOut = min(cost.values())
+
+    # TODO Reconstruct lowest cost medoids and cluster data appropriately
+
+    return dataOut
+        
 
 ########################## calculate_kMeans ##################################
 # Purpose:
