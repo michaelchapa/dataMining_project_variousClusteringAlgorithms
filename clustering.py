@@ -71,6 +71,7 @@ def calculate_PAM(dPoints, k):
 
 ########################## color_plot ########################################
 # Purpose:
+#   Helper function to display PAM algorithm output.
 #   Plots clustered data with a different color for each cluster
 # Parameters:
 #   I       dPoints         Numpy Array     2D numerical
