@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial import distance
 from itertools import combinations
-from sklearn_extra.cluster import KMedoids
+
 
 ########################## calculate_PAM #####################################
 # Purpose:
@@ -65,24 +65,9 @@ def calculate_PAM(dPoints, k):
                 dist_array[i][j] = distance.euclidean(dPoints[i], medoids[j])
             # construct list of cluster data
             # each value will be in the range 0 to k-1
-            dataOut = dist_array[i].index(min(dist_array[i]))
+            dist_array[i] = dist_array[i].index(min(dist_array[i]))
 
-    return dataOut
-
-########################## sklearn_PAM #######################################
-# Purpose:
-#   Uses the imported sklearn KMedoids function to cluster data with the
-#   PAM algorithm.
-# Parameters:
-#   I       dPoints             Numpy array     2D numerical
-#   I       k                   int             number of clusters
-# Returns:
-#   O       kmedoids.labels_    int array       cluster label for each point
-# Notes:
-#   n/a
-def sklearn_PAM(dPoints, k):
-    kmedoids = KMedoids(n_clusters=k).fit(dPoints)
-    return kmedoids.labels_
+    return dist_array
 
 
 ########################## color_plot ########################################
@@ -92,6 +77,7 @@ def sklearn_PAM(dPoints, k):
 # Parameters:
 #   I       dPoints         Numpy Array     2D numerical
 #   I       clusters        Int list        cluster designation for each point
+#                                           contains points equal to dPoints
 # Returns:
 #   n/a
 # Notes:
@@ -133,7 +119,7 @@ def color_plot(dPoints, clusters):
 #   O       dataOut         DataFrame       Each row is a cluster. 
 # Notes:
 #   None
-def calculate_kMeans(dPoints, k, randClust, verbose):
+def calculate_kMeans(dPoints, randClust, verbose):
     clusters = dict()
     for cluster in randClust:
         clusters.update({cluster: list()})
@@ -152,7 +138,7 @@ def calculate_kMeans(dPoints, k, randClust, verbose):
                 print("(%d, %d):" %(xPoint, yPoint))
                 print("\t", distances)
                 
-            minDistances = getShortestDistance(distances, k, 0)
+            minDistances = getShortestDistance(distances, 0)
             
             if type(minDistances) is tuple:
                 clusters.setdefault(minDistances, []).append((xPoint, yPoint))
@@ -181,7 +167,7 @@ def calculate_kMeans(dPoints, k, randClust, verbose):
 #                                       Value = list(closest coordinates)
 # Notes:
 #   None
-def getShortestDistance(distances, k, verbose):
+def getShortestDistance(distances, verbose):
     coordinates = dict() # keys = cluster points, values = dataPoints
     minimums = list()
     for dist, coord in distances:
