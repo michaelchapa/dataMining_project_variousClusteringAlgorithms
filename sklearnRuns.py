@@ -1,5 +1,6 @@
 from sklearn.cluster import KMeans
 from sklearn.cluster import MeanShift
+import numpy as np
 
 
 ########################### sklearn_kMeans ###################################
@@ -11,8 +12,10 @@ from sklearn.cluster import MeanShift
 #   None
 # Notes:
 #   None
-def sklearn_kMeans(data, k):
-    print(k, data)
+def sklearn_kMeans(data, k, initClusterPoints):
+    kmeans = KMeans(n_clusters = k, random_state = 0, \
+                    init = initClusterPoints).fit(data)
+    print(kmeans.cluster_centers_)
     
 
 ######################### sklearn_meanShift ##################################
@@ -30,4 +33,8 @@ def sklearn_meanShift(data, radius):
 
 # Context the file is running in is __main__ 
 if __name__ == "__main__":
-    print("Hola")
+    data = [[2, 10], [2, 5], [8, 4], [5, 8], 
+            [7, 5], [6, 4], [1, 2], [4, 9]]
+    initClusterPoints = [[8, 4], [5, 8], [1, 2]]
+    initClusterPoints = np.array(initClusterPoints)
+    sklearn_kMeans(data, 3, initClusterPoints)

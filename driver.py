@@ -17,13 +17,13 @@ def getInput():
     
     data = [[2, 10], [2, 5], [8, 4], [5, 8], 
             [7, 5], [6, 4], [1, 2], [4, 9]]
+    initClusterPoints = [(8, 4), (5, 8), (1, 2)]
     
     while(1):
         selection = int(input("[0] K-Means\n[1] Mean Shift\n" +
                     "[2] PAM\n[3] Run Sklearn\n[4] Cancel\n"))
     
         if selection == kMeans:
-            initClusterPoints = [(8, 4), (5, 8), (1, 2)]
             calculate_kMeans(data, 3, initClusterPoints, 0)
         if selection == meanShift: 
             calculate_meanShift(data, 3, 1)
@@ -54,8 +54,9 @@ def getSklearnInput(data):
                     "[2] Sklearn PAM\n[3] Cancel\n"))
     
         if selection == kMeans:
-            initClusterPoints = [(8, 4), (5, 8), (1, 2)]
-            sklearn_kMeans(data, 3)
+            initClusterPoints = [[8, 4], [5, 8], [1, 2]]
+            initClusterPoints = np.array(initClusterPoints)
+            sklearn_kMeans(data, 3, initClusterPoints)
         if selection == meanShift: 
             sklearn_meanShift(data, 3)
         if selection == PAM:
