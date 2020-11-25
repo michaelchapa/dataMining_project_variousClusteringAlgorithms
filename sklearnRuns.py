@@ -1,6 +1,7 @@
 from sklearn.cluster import KMeans
 from sklearn.cluster import MeanShift
 import numpy as np
+import pandas as pd
 
 
 ########################### sklearn_kMeans ###################################
@@ -13,8 +14,7 @@ import numpy as np
 # Notes:
 #   None
 def sklearn_kMeans(data, k, initClusterPoints):
-    kmeans = KMeans(n_clusters = k, random_state = 0, \
-                    init = initClusterPoints).fit(data)
+    kmeans = KMeans(n_clusters = k, random_state = 0).fit(data)
     print(kmeans.cluster_centers_)
     
 
@@ -28,7 +28,14 @@ def sklearn_kMeans(data, k, initClusterPoints):
 # Notes:
 #   None
 def sklearn_meanShift(data, radius):
-    print(radius, data)
+    clustering = MeanShift(bandwidth = radius).fit(data)
+    zipped = zip(clustering.labels_, data)
+    df = pd.DataFrame(zipped, columns = ["cluster", "coordinate"])
+    grouped = df.groupby(["cluster"])
+    
+    for x, y in grouped:
+        print("Cluster %d:" % (x))
+        print("\t", y, "\n")
     
 
 # Context the file is running in is __main__ 
@@ -37,4 +44,7 @@ if __name__ == "__main__":
             [7, 5], [6, 4], [1, 2], [4, 9]]
     initClusterPoints = [[8, 4], [5, 8], [1, 2]]
     initClusterPoints = np.array(initClusterPoints)
-    sklearn_kMeans(data, 3, initClusterPoints)
+    # sklearn_kMeans(data, 3, initClusterPoints)
+    sklearn_meanShift(data, 3)
+    
+    
