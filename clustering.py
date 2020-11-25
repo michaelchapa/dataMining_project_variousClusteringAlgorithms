@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial import distance
 from itertools import combinations
+from sklearn_extra.cluster import KMedoids
 
 ########################## calculate_PAM #####################################
 # Purpose:
@@ -67,6 +68,21 @@ def calculate_PAM(dPoints, k):
             dataOut = dist_array[i].index(min(dist_array[i]))
 
     return dataOut
+
+########################## sklearn_PAM #######################################
+# Purpose:
+#   Uses the imported sklearn KMedoids function to cluster data with the
+#   PAM algorithm.
+# Parameters:
+#   I       dPoints             Numpy array     2D numerical
+#   I       k                   int             number of clusters
+# Returns:
+#   O       kmedoids.labels_    int array       cluster label for each point
+# Notes:
+#   n/a
+def sklearn_PAM(dPoints, k):
+    kmedoids = KMedoids(n_clusters=k).fit(dPoints)
+    return kmedoids.labels_
 
 
 ########################## color_plot ########################################
