@@ -39,14 +39,16 @@ def getInput():
             calculate_kMeans(dataSet, initClusterPoints, 0)
         if selection == meanShift: 
             print("Mean Shift run: ")
+            mData = dataSet
             bandwidth = int(input("Enter bandwidth integer value:\n"))
-            calculate_meanShift(dataSet, bandwidth, 1)
+            calculate_meanShift(mData, bandwidth, 1)
         if selection == PAM:
             print("PAM run: ")
             clusters = calculate_PAM(dataSet, 3)
             color_plot(dataSet, clusters)
         if selection == runSklearn:
-            getSklearnInput(dataSet, initClusterPoints)
+            mData = dataSet
+            getSklearnInput(mData, initClusterPoints)
         if selection == cancel:
             print("Closing...")
             break
@@ -79,8 +81,9 @@ def getSklearnInput(dataSet, initClusterPoints):
             k = int(input("Enter k integer value:\n"))
             sklearn_kMeans(dataSet, k)
         if selection == meanShift:
+            mData = dataSet
             bandwidth = int(input("Enter bandwidth integer value:\n"))
-            sklearn_meanShift(dataSet, bandwidth)
+            sklearn_meanShift(mData, bandwidth)
         if selection == PAM:
             print("sklearn PAM run: ")
             k = int(input("Enter k integer value:\n"))

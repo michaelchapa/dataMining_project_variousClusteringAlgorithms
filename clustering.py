@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial import distance
 from itertools import combinations
-
+import copy
 
 ########################## calculate_PAM #####################################
 # Purpose:
@@ -228,10 +228,12 @@ def calculateCentroids(clusters):
 #   None
 # Notes:
 #   Asserts should be used to test conditions that should never happen. 
-def calculate_meanShift(data, radius, verbose):
-    assert all(type(dataPoint) == list for dataPoint in data), \
+def calculate_meanShift(mData, radius, verbose):
+    assert all(type(dataPoint) == list for dataPoint in mData), \
         "data-points should be a list of lists."
     
+    data = copy.deepcopy(mData)
+
     clusters = dict()
     currentClusterKey = 0
     
