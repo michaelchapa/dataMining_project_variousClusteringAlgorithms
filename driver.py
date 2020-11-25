@@ -15,23 +15,25 @@ from sklearnRuns import *
 def getInput():
     kMeans, meanShift, PAM, runSklearn, cancel  = 0, 1, 2, 3, 4
     test, big = 0, 1
-    bigData = pd.DataFrame('https://raw.githubusercontent.com/Davin-U/csv_files/master/hwk09.csv').to_numpy()
+    bigData = pd.read_csv('https://raw.githubusercontent.com/Davin-U/csv_files/master/hwk09.csv').to_numpy()
     testData = [[2, 10], [2, 5], [8, 4], [5, 8], 
             [7, 5], [6, 4], [1, 2], [4, 9]]
     
+    
+    dataChoice = int(input("[0] Test Data (8 points)\n" +
+                            "[1] Big Data (50 points)\n"))
+    
+    if dataChoice == test:
+        dataSet = testData
+        initClusterPoints = [(8, 4), (5, 8), (1, 2)]
+    if dataChoice == big:
+        dataSet = bigData
+        initClusterPoints = [bigData[0], bigData[24], bigData[45]]
     
     while(1):
         selection = int(input("[0] K-Means\n[1] Mean Shift\n" +
                     "[2] PAM\n[3] Run Sklearn\n[4] Cancel\n"))
         
-        dataChoice = int(input("[0] Test Data (8 points)\n" +
-                            "[1] Big Data (1500 points)\n"))
-        if dataChoice == test:
-            dataSet = testData
-            initClusterPoints = [(8, 4), (5, 8), (1, 2)]
-        if dataChoice == big:
-            dataSet = bigData
-            initClusterPoint = [bigData[0], bigData[501], bigData[1001]]
         if selection == kMeans:
             print("K-Means run: ")
             calculate_kMeans(dataSet, initClusterPoints, 0)
@@ -44,7 +46,7 @@ def getInput():
             clusters = calculate_PAM(dataSet, 3)
             color_plot(dataSet, clusters)
         if selection == runSklearn:
-            getSklearnInput()
+            getSklearnInput(dataSet, initClusterPoints)
         if selection == cancel:
             print("Closing...")
             break
@@ -60,7 +62,7 @@ def getInput():
 #   None
 # Notes:
 #   Infinite loop only ends with the selection of the 'cancel' option.    
-def getSklearnInput():
+def getSklearnInput(dataSet, initClusterPoints):
     kMeans, meanShift, PAM, cancel = 0, 1, 2, 3
     data = [[2, 10], [2, 5], [8, 4], [5, 8], 
             [7, 5], [6, 4], [1, 2], [4, 9]]
@@ -71,18 +73,19 @@ def getSklearnInput():
         print()
     
         if selection == kMeans:
-            initClusterPoints = [[8, 4], [5, 8], [1, 2]]
+            #initClusterPoints = [[8, 4], [5, 8], [1, 2]]
             initClusterPoints = np.array(initClusterPoints)
             print("sklearn K-Means run: ")
             k = int(input("Enter k integer value:\n"))
-            sklearn_kMeans(data, k)
+            sklearn_kMeans(dataSet, k)
         if selection == meanShift:
             bandwidth = int(input("Enter bandwidth integer value:\n"))
-            sklearn_meanShift(data, bandwidth)
+            sklearn_meanShift(dataSet, bandwidth)
         if selection == PAM:
             print("sklearn PAM run: ")
-            clusters = sklearn_PAM(data, k)
-            color_plot(data, clusters)
+            k = int(input("Enter k integer value:\n"))
+            clusters = sklearn_PAM(dataSet, k)
+            color_plot(dataSet, clusters)
         if selection == cancel:
             print("Exited Sklearn sub-menu...")
             break
