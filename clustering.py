@@ -117,7 +117,7 @@ def color_plot(dPoints, clusters):
 #   O       dataOut         DataFrame       Each row is a cluster. 
 # Notes:
 #   None
-def calculate_kMeans(dPoints, k, randClust, verbose):
+def calculate_kMeans(dPoints, randClust, verbose):
     clusters = dict()
     for cluster in randClust:
         clusters.update({cluster: list()})
@@ -136,7 +136,7 @@ def calculate_kMeans(dPoints, k, randClust, verbose):
                 print("(%d, %d):" %(xPoint, yPoint))
                 print("\t", distances)
                 
-            minDistances = getShortestDistance(distances, k, 0)
+            minDistances = getShortestDistance(distances, 0)
             
             if type(minDistances) is tuple:
                 clusters.setdefault(minDistances, []).append((xPoint, yPoint))
@@ -165,7 +165,7 @@ def calculate_kMeans(dPoints, k, randClust, verbose):
 #                                       Value = list(closest coordinates)
 # Notes:
 #   None
-def getShortestDistance(distances, k, verbose):
+def getShortestDistance(distances, verbose):
     coordinates = dict() # keys = cluster points, values = dataPoints
     minimums = list()
     for dist, coord in distances:

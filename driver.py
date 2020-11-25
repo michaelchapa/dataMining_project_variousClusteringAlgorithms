@@ -17,20 +17,24 @@ def getInput():
     
     data = [[2, 10], [2, 5], [8, 4], [5, 8], 
             [7, 5], [6, 4], [1, 2], [4, 9]]
-    initClusterPoints = [(8, 4), (5, 8), (1, 2)]
+    initClusterPoints = [(8, 4), (5, 8), (1, 2), (4, 9)]
     
     while(1):
+        dataTo = data
         selection = int(input("[0] K-Means\n[1] Mean Shift\n" +
                     "[2] PAM\n[3] Run Sklearn\n[4] Cancel\n"))
     
         if selection == kMeans:
-            calculate_kMeans(data, 3, initClusterPoints, 0)
+            print("K-Means run: ")
+            calculate_kMeans(dataTo, initClusterPoints, 0)
         if selection == meanShift: 
-            calculate_meanShift(data, 3, 1)
+            print("Mean Shift run: ")
+            bandwidth = int(input("Enter bandwidth integer value:\n"))
+            calculate_meanShift(dataTo, bandwidth, 1)
         if selection == PAM:
             print("PAM")
         if selection == runSklearn:
-            getSklearnInput(data)
+            getSklearnInput()
         if selection == cancel:
             print("Closing...")
             break
@@ -41,24 +45,30 @@ def getInput():
 #   This is a Launcher for all the Scikit Learn clustering sub-routines. 
 #   It accepts input Integers to select and run each algorithm. 
 # Parameters:
-#   I       data        Numpy Array         Sample 2-D data points
+#   None
 # Returns:
 #   None
 # Notes:
 #   Infinite loop only ends with the selection of the 'cancel' option.    
-def getSklearnInput(data):
+def getSklearnInput():
     kMeans, meanShift, PAM, cancel = 0, 1, 2, 3
+    data = [[2, 10], [2, 5], [8, 4], [5, 8], 
+            [7, 5], [6, 4], [1, 2], [4, 9]]
     
     while(1):
         selection = int(input("[0] Sklearn K-Means\n[1] Sklearn Mean Shift\n" +
                     "[2] Sklearn PAM\n[3] Cancel\n"))
+        print()
     
         if selection == kMeans:
             initClusterPoints = [[8, 4], [5, 8], [1, 2]]
             initClusterPoints = np.array(initClusterPoints)
-            sklearn_kMeans(data, 3, initClusterPoints)
-        if selection == meanShift: 
-            sklearn_meanShift(data, 3)
+            print("sklearn K-Means run: ")
+            k = int(input("Enter k integer value:\n"))
+            sklearn_kMeans(data, k)
+        if selection == meanShift:
+            bandwidth = int(input("Enter bandwidth integer value:\n"))
+            sklearn_meanShift(data, bandwidth)
         if selection == PAM:
             print("PAM")
         if selection == cancel:
