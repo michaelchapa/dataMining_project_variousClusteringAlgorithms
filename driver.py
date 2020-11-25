@@ -28,7 +28,7 @@ def getInput():
             calculate_meanShift(data, 2, 1)
         if selection == PAM:
             clusters = calculate_PAM(data, 3)
-            color_plot(data, clusters)
+            #color_plot(data, clusters)
         if selection == cancel:
             print("Closing...")
             break
