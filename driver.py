@@ -14,27 +14,35 @@ from sklearnRuns import *
 #   Infinite loop only ends with the selection of the 'cancel' option.
 def getInput():
     kMeans, meanShift, PAM, runSklearn, cancel  = 0, 1, 2, 3, 4
-    
-    data = [[2, 10], [2, 5], [8, 4], [5, 8], 
+    test, big = 0, 1
+    bigData = pd.DataFrame('https://raw.githubusercontent.com/Davin-U/csv_files/master/hwk09.csv').to_numpy()
+    testData = [[2, 10], [2, 5], [8, 4], [5, 8], 
             [7, 5], [6, 4], [1, 2], [4, 9]]
-    initClusterPoints = [(8, 4), (5, 8), (1, 2), (4, 9)]
+    
     
     while(1):
-        dataTo = data
         selection = int(input("[0] K-Means\n[1] Mean Shift\n" +
                     "[2] PAM\n[3] Run Sklearn\n[4] Cancel\n"))
-    
+        
+        dataChoice = int(input("[0] Test Data (8 points)\n" +
+                            "[1] Big Data (1500 points)\n"))
+        if dataChoice == test:
+            dataSet = testData
+            initClusterPoints = [(8, 4), (5, 8), (1, 2)]
+        if dataChoice == big:
+            dataSet = bigData
+            initClusterPoint = [bigData[0], bigData[501], bigData[1001]]
         if selection == kMeans:
             print("K-Means run: ")
-            calculate_kMeans(dataTo, initClusterPoints, 0)
+            calculate_kMeans(dataSet, initClusterPoints, 0)
         if selection == meanShift: 
             print("Mean Shift run: ")
             bandwidth = int(input("Enter bandwidth integer value:\n"))
-            calculate_meanShift(dataTo, bandwidth, 1)
+            calculate_meanShift(dataSet, bandwidth, 1)
         if selection == PAM:
             print("PAM run: ")
-            clusters = calculate_PAM(data, 3)
-            color_plot(data, clusters)
+            clusters = calculate_PAM(dataSet, 3)
+            color_plot(dataSet, clusters)
         if selection == runSklearn:
             getSklearnInput()
         if selection == cancel:
