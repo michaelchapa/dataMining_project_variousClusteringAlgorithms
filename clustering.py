@@ -229,8 +229,8 @@ def calculateCentroids(clusters):
 # Notes:
 #   Asserts should be used to test conditions that should never happen. 
 def calculate_meanShift(mData, radius, verbose):
-    assert all(type(dataPoint) == list for dataPoint in mData), \
-        "data-points should be a list of lists."
+    # assert all(type(dataPoint) == list for dataPoint in mData), \
+    #     "data-points should be a list of lists."
     
     data = copy.deepcopy(mData)
 
