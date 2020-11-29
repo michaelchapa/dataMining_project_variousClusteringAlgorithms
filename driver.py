@@ -28,7 +28,8 @@ def getInput():
         initClusterPoints = [(8, 4), (5, 8), (1, 2)]
     if dataChoice == big:
         dataSet = bigData
-        initClusterPoints = [bigData[0], bigData[24], bigData[45]]
+        initClusterPoints = [tuple(bigData[0]), 
+                             tuple(bigData[24]), tuple(bigData[45])]
     
     while(1):
         selection = int(input("[0] K-Means\n[1] Mean Shift\n" +
